@@ -16,7 +16,9 @@
  */
 package com.alibaba.nacossync.util;
 
+import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.constant.SkyWalkerConstants;
 import com.alibaba.nacossync.pojo.model.TaskDO;
 import com.alibaba.nacossync.pojo.request.ClusterAddRequest;
@@ -30,6 +32,7 @@ import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -75,7 +78,7 @@ public class SkyWalkerUtil {
     public static String generateTaskId(TaskAddRequest addTaskRequest) {
 
         return generateTaskId(addTaskRequest.getServiceName(), addTaskRequest.getGroupName(),
-                addTaskRequest.getSourceClusterId(), addTaskRequest.getDestClusterId());
+                addTaskRequest.getSourceClusterId(), addTaskRequest.getDestClusterId(), addTaskRequest.getFramework());
     }
 
     /**
@@ -84,7 +87,7 @@ public class SkyWalkerUtil {
      * @return
      */
     public static String generateTaskId(String serviceName, String groupName,
-                                        String sourceClusterId, String destClusterId) {
+                                        String sourceClusterId, String destClusterId, String framework) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -95,6 +98,8 @@ public class SkyWalkerUtil {
         sb.append(sourceClusterId);
         sb.append(SkyWalkerConstants.UNDERLINE);
         sb.append(destClusterId);
+        sb.append(SkyWalkerConstants.UNDERLINE);
+        sb.append(framework);
         return SkyWalkerUtil.StringToMd5(sb.toString());
     }
 
@@ -139,9 +144,9 @@ public class SkyWalkerUtil {
         return localIp;
     }
 
-    public static String generateSyncKey(ClusterTypeEnum sourceClusterType, ClusterTypeEnum destClusterType) {
+    public static String generateSyncKey(ClusterTypeEnum sourceClusterType, ClusterTypeEnum destClusterType, FrameworkEnum frameworkEnum) {
 
-        return Joiner.on(":").join(sourceClusterType.getCode(), destClusterType.getCode());
+        return Joiner.on(":").join(sourceClusterType.getCode(), destClusterType.getCode(), frameworkEnum.getCode());
     }
 
     public static String getOperationId(TaskDO taskDO) {
@@ -152,5 +157,9 @@ public class SkyWalkerUtil {
     public static String generateOperationId() {
 
         return UUID.randomUUID().toString();
+    }
+
+    public static boolean forSync(Map meta) {
+        return meta != null && meta.containsKey(SkyWalkerConstants.SYNC_SOURCE_KEY);
     }
 }

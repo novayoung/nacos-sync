@@ -19,6 +19,7 @@ package com.alibaba.nacossync.cache;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.dao.ClusterAccessService;
 import com.alibaba.nacossync.exception.SkyWalkerException;
 import com.alibaba.nacossync.pojo.FinishedTask;
@@ -98,4 +99,7 @@ public class SkyWalkerCacheServices {
         return finishedTaskMap;
     }
 
+    public FrameworkEnum getFramework(String frameworkId) {
+        return null;
+    }
 }

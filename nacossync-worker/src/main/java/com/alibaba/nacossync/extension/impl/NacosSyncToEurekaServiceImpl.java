@@ -19,6 +19,7 @@ import com.alibaba.nacos.api.naming.listener.NamingEvent;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacossync.cache.SkyWalkerCacheServices;
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.constant.MetricsStatisticsType;
 import com.alibaba.nacossync.constant.SkyWalkerConstants;
 import com.alibaba.nacossync.extension.SyncService;
@@ -41,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author zhanglong
  */
 @Slf4j
-@NacosSyncService(sourceCluster = ClusterTypeEnum.NACOS, destinationCluster = ClusterTypeEnum.EUREKA)
+@NacosSyncService(sourceCluster = ClusterTypeEnum.NACOS, destinationCluster = ClusterTypeEnum.EUREKA, framework = FrameworkEnum.SPRING_CLOUD)
 public class NacosSyncToEurekaServiceImpl implements SyncService {
     private final Map<String, EventListener> nacosListenerMap = new ConcurrentHashMap<>();
 
@@ -88,7 +89,7 @@ public class NacosSyncToEurekaServiceImpl implements SyncService {
     public boolean sync(TaskDO taskDO) {
         try {
             NamingService sourceNamingService =
-                    nacosServerHolder.get(taskDO.getSourceClusterId(), taskDO.getGroupName());
+                    nacosServerHolder.get(taskDO.getSourceClusterId(), taskDO.getNameSpace());
             EurekaNamingService destNamingService =
                     eurekaServerHolder.get(taskDO.getDestClusterId(), taskDO.getGroupName());
 

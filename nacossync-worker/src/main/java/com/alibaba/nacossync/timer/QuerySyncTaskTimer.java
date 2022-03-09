@@ -58,9 +58,8 @@ public class QuerySyncTaskTimer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         /** Fetch the task list from the database every 3 seconds */
-        scheduledExecutorService.scheduleWithFixedDelay(new CheckRunningStatusThread(), 0, 3000,
+        scheduledExecutorService.scheduleWithFixedDelay(new CheckRunningStatusThread(), 20000, 3000,
                 TimeUnit.MILLISECONDS);
-
     }
 
     private class CheckRunningStatusThread implements Runnable {

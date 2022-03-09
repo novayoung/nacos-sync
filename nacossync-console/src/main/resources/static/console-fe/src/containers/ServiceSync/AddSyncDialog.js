@@ -20,6 +20,7 @@ class AddSyncDialog extends React.Component {
       destClusterId: '',
       nameSpace: '',
       groupName: '',
+      framework: '',
       serviceName: '',
       sourceClusterId: '',
       version: '',
@@ -32,8 +33,8 @@ class AddSyncDialog extends React.Component {
   }
 
   save() {
-    const { destClusterId, nameSpace, groupName, serviceName, sourceClusterId, version } = this.state;
-    add({ destClusterId, nameSpace, groupName, serviceName, sourceClusterId, version })
+    const { destClusterId, nameSpace, groupName, serviceName, sourceClusterId, version, framework } = this.state;
+    add({ destClusterId, nameSpace, groupName, serviceName, sourceClusterId, version, framework })
       .then(() => {
         this.props.turnPage(1);
         this.close();
@@ -70,6 +71,13 @@ class AddSyncDialog extends React.Component {
               placeholder={locale.nameSpacePlaceholder}
               onChange={nameSpace => this.setState({ nameSpace })}
             />
+          </FormItem>
+          <FormItem label={`${locale.framework}:`}>
+            <Select onChange={framework => this.setState({ framework })}>
+              <Option key='ALL' value='ALL'>ALL</Option>
+              <Option key='DUBBO' value='DUBBO'>DUBBO</Option>
+              <Option key='SPRING_CLOUD' value='SPRING_CLOUD'>SPRING-CLOUD</Option>
+            </Select>
           </FormItem>
           <FormItem label={`${locale.serviceName}:`}>
             <Input

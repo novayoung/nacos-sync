@@ -70,4 +70,9 @@ public class TaskDO implements Serializable {
      * operation id,The operation id follow when the task status changes
      */
     private String operationId;
+
+    /**
+     * framework
+     */
+    private String framework;
 }

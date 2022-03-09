@@ -57,6 +57,8 @@ const I18N_CONF = {
   },
   AddSyncDialog: {
     title: 'New Sync',
+    framework: 'framework',
+    frameworkPlaceholder: 'Please select framework',
     serviceName: 'Service Name',
     serviceNamePlaceholder: 'Please enter service name',
     groupName: 'Group Name',

@@ -17,6 +17,7 @@ import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacossync.cache.SkyWalkerCacheServices;
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.constant.MetricsStatisticsType;
 import com.alibaba.nacossync.constant.SkyWalkerConstants;
 import com.alibaba.nacossync.extension.SyncService;
@@ -43,7 +44,7 @@ import java.util.Map;
  * @date: 2018-12-31 16:25
  */
 @Slf4j
-@NacosSyncService(sourceCluster = ClusterTypeEnum.EUREKA, destinationCluster = ClusterTypeEnum.NACOS)
+@NacosSyncService(sourceCluster = ClusterTypeEnum.EUREKA, destinationCluster = ClusterTypeEnum.NACOS, framework = FrameworkEnum.SPRING_CLOUD)
 public class EurekaSyncToNacosServiceImpl implements SyncService {
 
     private final MetricsManager metricsManager;
@@ -72,7 +73,7 @@ public class EurekaSyncToNacosServiceImpl implements SyncService {
         try {
             specialSyncEventBus.unsubscribe(taskDO);
             EurekaNamingService eurekaNamingService = eurekaServerHolder.get(taskDO.getSourceClusterId(), null);
-            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), null);
+            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), taskDO.getNameSpace());
             List<InstanceInfo> eurekaInstances = eurekaNamingService.getApplications(taskDO.getServiceName());
             deleteAllInstanceFromEureka(taskDO, destNamingService, eurekaInstances);
 
@@ -88,7 +89,7 @@ public class EurekaSyncToNacosServiceImpl implements SyncService {
     public boolean sync(TaskDO taskDO) {
         try {
             EurekaNamingService eurekaNamingService = eurekaServerHolder.get(taskDO.getSourceClusterId(), null);
-            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), null);
+            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), taskDO.getNameSpace());
             List<InstanceInfo> eurekaInstances = eurekaNamingService.getApplications(taskDO.getServiceName());
             List<Instance> nacosInstances = destNamingService.getAllInstances(taskDO.getServiceName());
 

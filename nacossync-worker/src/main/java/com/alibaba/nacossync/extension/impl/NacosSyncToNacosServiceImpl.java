@@ -20,6 +20,7 @@ import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.alibaba.nacossync.cache.SkyWalkerCacheServices;
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.constant.MetricsStatisticsType;
 import com.alibaba.nacossync.constant.SkyWalkerConstants;
 import com.alibaba.nacossync.extension.SyncService;
@@ -46,7 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 
 @Slf4j
-@NacosSyncService(sourceCluster = ClusterTypeEnum.NACOS, destinationCluster = ClusterTypeEnum.NACOS)
+@NacosSyncService(sourceCluster = ClusterTypeEnum.NACOS, destinationCluster = ClusterTypeEnum.NACOS, framework = FrameworkEnum.ALL)
 public class NacosSyncToNacosServiceImpl implements SyncService {
 
     private Map<String, EventListener> listenerMap = new ConcurrentHashMap<>();

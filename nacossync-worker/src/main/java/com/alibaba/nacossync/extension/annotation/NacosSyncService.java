@@ -13,6 +13,7 @@
 package com.alibaba.nacossync.extension.annotation;
 
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.extension.SyncManagerService;
 import com.alibaba.nacossync.extension.SyncService;
 import org.springframework.core.annotation.AliasFor;
@@ -42,4 +43,6 @@ public @interface NacosSyncService {
     ClusterTypeEnum sourceCluster();
 
     ClusterTypeEnum destinationCluster();
+
+    FrameworkEnum framework();
 }

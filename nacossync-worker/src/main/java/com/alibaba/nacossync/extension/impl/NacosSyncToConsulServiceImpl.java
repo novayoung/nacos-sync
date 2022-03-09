@@ -18,6 +18,7 @@ import com.alibaba.nacos.api.naming.listener.NamingEvent;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacossync.cache.SkyWalkerCacheServices;
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.constant.MetricsStatisticsType;
 import com.alibaba.nacossync.constant.SkyWalkerConstants;
 import com.alibaba.nacossync.extension.SyncService;
@@ -48,7 +49,7 @@ import java.util.stream.Collectors;
  * @author zhanglong
  */
 @Slf4j
-@NacosSyncService(sourceCluster = ClusterTypeEnum.NACOS, destinationCluster = ClusterTypeEnum.CONSUL)
+@NacosSyncService(sourceCluster = ClusterTypeEnum.NACOS, destinationCluster = ClusterTypeEnum.CONSUL, framework = FrameworkEnum.SPRING_CLOUD)
 public class NacosSyncToConsulServiceImpl implements SyncService {
     private Map<String, EventListener> nacosListenerMap = new ConcurrentHashMap<>();
 
@@ -72,7 +73,7 @@ public class NacosSyncToConsulServiceImpl implements SyncService {
         try {
 
             NamingService sourceNamingService =
-                nacosServerHolder.get(taskDO.getSourceClusterId(), taskDO.getGroupName());
+                nacosServerHolder.get(taskDO.getSourceClusterId(), taskDO.getNameSpace());
             ConsulClient consulClient = consulServerHolder.get(taskDO.getDestClusterId(), taskDO.getGroupName());
 
             sourceNamingService.unsubscribe(taskDO.getServiceName(), nacosListenerMap.get(taskDO.getTaskId()));
@@ -100,7 +101,7 @@ public class NacosSyncToConsulServiceImpl implements SyncService {
     public boolean sync(TaskDO taskDO) {
         try {
             NamingService sourceNamingService =
-                nacosServerHolder.get(taskDO.getSourceClusterId(), taskDO.getGroupName());
+                nacosServerHolder.get(taskDO.getSourceClusterId(), taskDO.getNameSpace());
             ConsulClient consulClient = consulServerHolder.get(taskDO.getDestClusterId(), taskDO.getGroupName());
 
             nacosListenerMap.putIfAbsent(taskDO.getTaskId(), event -> {

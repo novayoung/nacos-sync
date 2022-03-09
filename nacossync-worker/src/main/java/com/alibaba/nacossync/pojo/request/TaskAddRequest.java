@@ -33,4 +33,5 @@ public class TaskAddRequest extends BaseRequest {
     private String version;
     private String nameSpace;
 
+    private String framework;
 }

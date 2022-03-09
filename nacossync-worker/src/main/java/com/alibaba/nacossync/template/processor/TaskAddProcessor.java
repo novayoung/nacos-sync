@@ -67,7 +67,7 @@ public class TaskAddProcessor implements Processor<TaskAddRequest, TaskAddResult
 
         }
 
-        if (null == syncManagerService.getSyncService(sourceCluster.getClusterId(), destCluster.getClusterId())) {
+        if (null == syncManagerService.getSyncService(sourceCluster.getClusterId(), destCluster.getClusterId(), taskAddRequest.getFramework())) {
 
             throw new SkyWalkerException("不支持当前同步类型");
         }
@@ -89,6 +89,7 @@ public class TaskAddProcessor implements Processor<TaskAddRequest, TaskAddResult
             taskDO.setTaskStatus(TaskStatusEnum.SYNC.getCode());
             taskDO.setWorkerIp(SkyWalkerUtil.getLocalIp());
             taskDO.setOperationId(SkyWalkerUtil.generateOperationId());
+            taskDO.setFramework(taskAddRequest.getFramework());
 
         } else {
 

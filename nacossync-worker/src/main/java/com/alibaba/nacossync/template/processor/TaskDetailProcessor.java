@@ -56,6 +56,7 @@ public class TaskDetailProcessor implements Processor<TaskDetailQueryRequest, Ta
         taskModel.setSourceClusterId(taskDO.getSourceClusterId());
         taskModel.setTaskStatus(taskDO.getTaskStatus());
         taskModel.setTaskId(taskDO.getTaskId());
+        taskModel.setFramework(taskDO.getFramework());
 
         taskDetailQueryResult.setTaskModel(taskModel);
     }

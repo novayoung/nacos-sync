@@ -27,8 +27,8 @@ class AddConfigDialog extends React.Component {
     }
 
     save() {
-      const { clusterName, clusterType, connectKeyList } = this.state;
-      add({ clusterName, clusterType, connectKeyList })
+      const { clusterName, clusterType, connectKeyList, userName, password } = this.state;
+      add({ clusterName, clusterType, connectKeyList, userName, password })
         .then(() => {
           this.props.turnPage(1);
           this.close();
@@ -79,6 +79,18 @@ class AddConfigDialog extends React.Component {
                 placeholder={locale.connectKeyListPlaceholder}
               />
             </FormItem>
+              <FormItem label={`${locale.userName}:`}>
+                  <Input
+                      onChange={userName => this.setState({ userName })}
+                      placeholder={locale.userNamePlaceholder}
+                  />
+              </FormItem>
+              <FormItem label={`${locale.password}:`}>
+                  <Input
+                      onChange={password => this.setState({ password })}
+                      placeholder={locale.passwordPlaceholder}
+                  />
+              </FormItem>
           </Form>
         </Dialog>
       );

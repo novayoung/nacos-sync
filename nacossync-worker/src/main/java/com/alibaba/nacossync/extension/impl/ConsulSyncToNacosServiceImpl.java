@@ -17,6 +17,7 @@ import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacossync.cache.SkyWalkerCacheServices;
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.constant.MetricsStatisticsType;
 import com.alibaba.nacossync.constant.SkyWalkerConstants;
 import com.alibaba.nacossync.extension.SyncService;
@@ -43,7 +44,7 @@ import java.util.*;
  * @date: 2018-12-31 16:25
  */
 @Slf4j
-@NacosSyncService(sourceCluster = ClusterTypeEnum.CONSUL, destinationCluster = ClusterTypeEnum.NACOS)
+@NacosSyncService(sourceCluster = ClusterTypeEnum.CONSUL, destinationCluster = ClusterTypeEnum.NACOS, framework = FrameworkEnum.SPRING_CLOUD)
 public class ConsulSyncToNacosServiceImpl implements SyncService {
 
     @Autowired
@@ -71,7 +72,7 @@ public class ConsulSyncToNacosServiceImpl implements SyncService {
 
         try {
             specialSyncEventBus.unsubscribe(taskDO);
-            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), null);
+            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), taskDO.getNameSpace());
             List<Instance> allInstances = destNamingService.getAllInstances(taskDO.getServiceName());
             for (Instance instance : allInstances) {
                 if (needDelete(instance.getMetadata(), taskDO)) {
@@ -92,7 +93,7 @@ public class ConsulSyncToNacosServiceImpl implements SyncService {
     public boolean sync(TaskDO taskDO) {
         try {
             ConsulClient consulClient = consulServerHolder.get(taskDO.getSourceClusterId(), null);
-            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), null);
+            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), taskDO.getNameSpace());
             Response<List<HealthService>> response =
                 consulClient.getHealthServices(taskDO.getServiceName(), true, QueryParams.DEFAULT);
             List<HealthService> healthServiceList = response.getValue();

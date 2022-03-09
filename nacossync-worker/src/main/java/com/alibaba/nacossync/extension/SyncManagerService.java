@@ -17,6 +17,7 @@ import static com.alibaba.nacossync.util.SkyWalkerUtil.generateSyncKey;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacossync.cache.SkyWalkerCacheServices;
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.extension.annotation.NacosSyncService;
 import com.alibaba.nacossync.pojo.model.TaskDO;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,13 +49,13 @@ public class SyncManagerService implements InitializingBean, ApplicationContextA
 
     public boolean delete(TaskDO taskDO) throws NacosException {
 
-        return getSyncService(taskDO.getSourceClusterId(), taskDO.getDestClusterId()).delete(taskDO);
+        return getSyncService(taskDO.getSourceClusterId(), taskDO.getDestClusterId(), taskDO.getFramework()).delete(taskDO);
 
     }
 
     public boolean sync(TaskDO taskDO) {
 
-        return getSyncService(taskDO.getSourceClusterId(), taskDO.getDestClusterId()).sync(taskDO);
+        return getSyncService(taskDO.getSourceClusterId(), taskDO.getDestClusterId(), taskDO.getFramework()).sync(taskDO);
 
     }
 
@@ -64,7 +65,8 @@ public class SyncManagerService implements InitializingBean, ApplicationContextA
             NacosSyncService nacosSyncService = value.getClass().getAnnotation(NacosSyncService.class);
             ClusterTypeEnum sourceCluster = nacosSyncService.sourceCluster();
             ClusterTypeEnum destinationCluster = nacosSyncService.destinationCluster();
-            syncServiceMap.put(generateSyncKey(sourceCluster, destinationCluster), value);
+            FrameworkEnum frameworkEnum = nacosSyncService.framework();
+            syncServiceMap.put(generateSyncKey(sourceCluster, destinationCluster, frameworkEnum), value);
         });
     }
 
@@ -73,12 +75,12 @@ public class SyncManagerService implements InitializingBean, ApplicationContextA
         this.applicationContext = applicationContext;
     }
 
-    public SyncService getSyncService(String sourceClusterId, String destClusterId) {
+    public SyncService getSyncService(String sourceClusterId, String destClusterId, String framework) {
 
         ClusterTypeEnum sourceClusterType = this.skyWalkerCacheServices.getClusterType(sourceClusterId);
         ClusterTypeEnum destClusterType = this.skyWalkerCacheServices.getClusterType(destClusterId);
 
-        return syncServiceMap.get(generateSyncKey(sourceClusterType, destClusterType));
+        return syncServiceMap.get(generateSyncKey(sourceClusterType, destClusterType, FrameworkEnum.valueOf(framework)));
     }
 
 }

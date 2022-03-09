@@ -117,6 +117,7 @@ class ServiceSync extends React.Component {
         </Form>
         <Table dataSource={taskModels} loading={loading}>
           <Table.Column title={locale.serviceName} dataIndex="serviceName" />
+          <Table.Column title={locale.framework} dataIndex="framework" />
           <Table.Column title={locale.groupName} dataIndex="groupName" />
           <Table.Column
             title={locale.sourceCluster}

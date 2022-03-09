@@ -32,6 +32,7 @@ import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacossync.cache.SkyWalkerCacheServices;
 import com.alibaba.nacossync.constant.ClusterTypeEnum;
+import com.alibaba.nacossync.constant.FrameworkEnum;
 import com.alibaba.nacossync.constant.MetricsStatisticsType;
 import com.alibaba.nacossync.constant.SkyWalkerConstants;
 import com.alibaba.nacossync.extension.SyncService;
@@ -61,7 +62,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date: 2018-12-24 21:33
  */
 @Slf4j
-@NacosSyncService(sourceCluster = ClusterTypeEnum.ZK, destinationCluster = ClusterTypeEnum.NACOS)
+@NacosSyncService(sourceCluster = ClusterTypeEnum.ZK, destinationCluster = ClusterTypeEnum.NACOS, framework = FrameworkEnum.DUBBO)
 public class ZookeeperSyncToNacosServiceImpl implements SyncService {
 
     @Autowired
@@ -98,7 +99,7 @@ public class ZookeeperSyncToNacosServiceImpl implements SyncService {
             }
 
             TreeCache treeCache = getTreeCache(taskDO);
-            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), null);
+            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), taskDO.getNameSpace());
             // 初次执行任务统一注册所有实例
             registerAllInstances(taskDO, destNamingService);
             //注册ZK监听
@@ -192,7 +193,7 @@ public class ZookeeperSyncToNacosServiceImpl implements SyncService {
         try {
 
             CloseableUtils.closeQuietly(treeCacheMap.get(taskDO.getTaskId()));
-            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), null);
+            NamingService destNamingService = nacosServerHolder.get(taskDO.getDestClusterId(), taskDO.getNameSpace());
             if(!ALL_SERVICE_NAME_PATTERN.equals(taskDO.getServiceName())) {
                 if (nacosServiceNameMap.containsKey(taskDO.getServiceName())) {
                     List<Instance> allInstances =
